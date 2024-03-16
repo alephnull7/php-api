@@ -7,8 +7,6 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /var/www/html
 COPY src/ /var/www/html
 
-COPY .htaccess /var/www/html
-
 RUN docker-php-ext-install pdo pdo_pgsql
 
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
