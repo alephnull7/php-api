@@ -56,9 +56,14 @@ class Quote extends Model
     }
 
     private function get_random_result($results) {
-        $data = json_decode($results)->data;
-        $count = count($data);
-        $index = rand(0, $count-1);
-        return json_encode($data[$index]);
+        $results = json_decode($results);
+        if (isset($results->data)) {
+            $data = $results->data;
+            $count = count($data);
+            $index = rand(0, $count-1);
+            return json_encode($data[$index]);
+        } else {
+            return json_encode($results);
+        }
     }
 }

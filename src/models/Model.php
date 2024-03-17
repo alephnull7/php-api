@@ -239,8 +239,13 @@ class Model
         while ($row = $this->stmt->fetch(PDO::FETCH_ASSOC)) {
             $data_arr[] = $row;
         }
-        $results_arr['data'] = $data_arr;
-        return json_encode($results_arr);
+
+        if (count($data_arr) == 1) {
+            return json_encode($data_arr[0]);
+        } else {
+            $results_arr['data'] = $data_arr;
+            return json_encode($results_arr);
+        }
     }
 
     private function update_pars()
