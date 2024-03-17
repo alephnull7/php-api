@@ -342,18 +342,22 @@ class Model
     private function set_query_read_single()
     {
         $where_sub = $this->query_substring("WHERE");
-        $this->query = "SELECT * FROM {$this->table} {$where_sub} ORDER BY id";
+        $this->query = "SELECT * FROM {$this->table}{$where_sub} ORDER BY id";
     }
 
     private function set_query_update()
     {
         $set_sub = $this->query_substring("SET");
-        $this->query = "UPDATE {$this->table} {$set_sub} WHERE id = :id";
+        $this->query = "UPDATE {$this->table}{$set_sub} WHERE id = :id";
     }
 
     private function query_substring($type)
     {
         $par_keys = array_keys($this->pars);
+        if (count($par_keys) == 0) {
+            return "";
+        }
+
         switch ($type) {
             case 'WHERE':
                 $delim = "AND";
@@ -367,7 +371,7 @@ class Model
         }
         $par_keys = array_values($par_keys);
 
-        $substring = $type . " ";
+        $substring = " " . $type . " ";
         $delim = " " . $delim . " ";
         for ($index = 0; $index < count($par_keys); $index++) {
             $col = $par_keys[$index];
