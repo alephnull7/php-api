@@ -13,7 +13,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         exit();
     case 'GET':
         $keys = array_keys($_GET);
-        $pars = array_intersect($keys, array('id','author_id','category_id'));
+        $pars = array_intersect($keys, array('id','author_id','category_id', 'random'));
         if (!empty($pars)) {
             include_once 'read_single.php';
         } else {
