@@ -356,7 +356,7 @@ class Model
         $this->query = "UPDATE {$this->table}{$set_sub} WHERE id = :id";
     }
 
-    private function query_substring($type)
+    protected function query_substring($type, $table_prefix = "")
     {
         $par_keys = array_keys($this->pars);
         if (count($par_keys) == 0) {
@@ -380,7 +380,7 @@ class Model
         $delim = " " . $delim . " ";
         for ($index = 0; $index < count($par_keys); $index++) {
             $col = $par_keys[$index];
-            $substring = $substring . "{$col} = :{$col}";
+            $substring = $substring . "{$table_prefix}{$col} = :{$col}";
             if ($index < count($par_keys) - 1) {
                 $substring = $substring . $delim;
             }
