@@ -341,13 +341,13 @@ class Model
 
     private function set_query_read()
     {
-        $this->query = "SELECT * FROM {$this->table} ORDER BY id";
+        $this->query = "SELECT {$this->all_select()} FROM {$this->table} ORDER BY id";
     }
 
     private function set_query_read_single()
     {
         $where_sub = $this->query_substring("WHERE");
-        $this->query = "SELECT * FROM {$this->table}{$where_sub} ORDER BY id";
+        $this->query = "SELECT {$this->all_select()} FROM {$this->table}{$where_sub} ORDER BY id";
     }
 
     private function set_query_update()
@@ -386,5 +386,24 @@ class Model
             }
         }
         return $substring;
+    }
+
+    private function all_select()
+    {
+        $all_select = "";
+        for ($index = 0; $index < count($this->cols); $index++) {
+            $col = $this->cols[$index];
+            $val_arr = explode("_", $col);
+            if (in_array('id', $val_arr) && count($val_arr) > 1) {
+                $all_select = $all_select . "{$col} AS {$val_arr[0]}";
+            } else {
+                $all_select = $all_select . $col;
+            }
+
+            if ($index < count($this->cols) - 1) {
+                $all_select = $all_select . ", ";
+            }
+        }
+        return $all_select;
     }
 }
