@@ -243,7 +243,8 @@ class Model
         if (count($data_arr) == 1) {
             return json_encode($data_arr[0]);
         } else {
-            return json_encode($data_arr);
+            $results_arr['data'] = $data_arr;
+            return json_encode($results_arr);
         }
     }
 
