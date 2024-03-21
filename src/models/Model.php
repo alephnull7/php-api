@@ -442,7 +442,7 @@ class Model
     }
 
     protected function table_prefix() {
-        if (count($this->foreign_keys) > 0) {
+        if (count($this->foreign_keys) > 0 && $this->operation != "update") {
             $table_prefix = "{$this->table}.";
         } else {
             $table_prefix = "";
