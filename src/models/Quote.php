@@ -11,7 +11,8 @@ class Quote extends Model
     public function __construct($conn)
     {
         $name = 'quote';
-        parent::__construct($conn, $name);
+        $foreign_keys = array('author_id', 'category_id');
+        parent::__construct($conn, $name, $foreign_keys);
     }
 
     public function read_single($data)
@@ -28,13 +29,9 @@ class Quote extends Model
     protected function set_cols()
     {
         parent::set_cols();
-        $foreign_keys = array('author_id', 'category_id');
         switch ($this->operation) {
             case 'read_single':
-                $this->diff_threshold = 3;
-            case 'create':
-            case 'update':
-                $this->cols = array_merge($this->cols, $foreign_keys);
+                $this->diff_threshold++;
                 break;
             default:
         }

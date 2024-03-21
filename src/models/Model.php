@@ -10,6 +10,7 @@ class Model
     protected $table;
     protected $name;
     protected $id_name;
+    protected $foreign_keys;
     protected $cols;
     protected $pars;
     protected $diff_threshold;
@@ -19,9 +20,10 @@ class Model
     protected $error;
 
     // constructor
-    public function __construct($conn, $name)
+    public function __construct($conn, $name, $foreign_keys = array())
     {
         $this->conn = $conn;
+        $this->foreign_keys = $foreign_keys;
         $this->set_schema($name);
     }
 
@@ -91,17 +93,19 @@ class Model
     // protected methods overridden by subclasses
     protected function set_cols()
     {
-        $this->diff_threshold = 0;
+        $this->diff_threshold = count($this->foreign_keys);
         switch ($this->operation) {
             case 'delete':
             case 'read_single':
                 $this->cols = array('id');
+                $this->cols = array_merge($this->cols, $this->foreign_keys);
                 break;
             case 'create':
                 $this->cols = array($this->name);
                 break;
             case 'update':
                 $this->cols = array('id', $this->name);
+                $this->cols = array_merge($this->cols, $this->foreign_keys);
                 break;
             default:
                 $this->cols = NULL;
