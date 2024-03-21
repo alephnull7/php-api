@@ -405,6 +405,7 @@ class Model
         $cols[] = "id";
         $cols = array_merge($cols, $this->foreign_keys);
         $cols = array_unique($cols);
+        $cols = array_values($cols);
         $all_select = "";
         for ($index = 0; $index < count($cols); $index++) {
             $col = $cols[$index];
