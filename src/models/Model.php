@@ -141,6 +141,7 @@ class Model
         $name = $this->name;
         $operation = $this->operation;
         $pars = $this->pars;
+        $foreign_keys = $this->foreign_keys;
 
         // check each key separately for more informative messages
         foreach ($this->pars as $key => $val) {
@@ -152,6 +153,7 @@ class Model
             if ($key != 'id') {
                 $this->table = getenv(strtoupper($key_arr[0]));
                 $this->id_name = $key;
+                $this->foreign_keys = array();
             }
             $data = array('id' => $val);
 
@@ -159,6 +161,7 @@ class Model
             $this->check_existence();
 
             // reset model state
+            $this->foreign_keys = $foreign_keys;
             $this->set_schema($name);
             $this->set_operation($operation);
             $this->pars = $pars;
