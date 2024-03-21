@@ -99,7 +99,6 @@ class Model
                 $this->diff_threshold = count($this->foreign_keys);
             case 'delete':
                 $this->cols = array('id');
-                $this->cols = array_merge($this->cols, $this->foreign_keys);
                 break;
             case 'create':
                 $this->cols = array($this->name);
