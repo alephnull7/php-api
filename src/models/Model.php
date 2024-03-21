@@ -150,10 +150,10 @@ class Model
                 continue;
             }
 
+            $this->foreign_keys = array();
             if ($key != 'id') {
                 $this->table = getenv(strtoupper($key_arr[0]));
                 $this->id_name = $key;
-                $this->foreign_keys = array();
             }
             $data = array('id' => $val);
 
