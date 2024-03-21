@@ -389,6 +389,10 @@ class Model
 
     private function all_select()
     {
+        if (count($this->foreign_keys) == 0) {
+            return "*";
+        }
+
         $cols = $this->cols;
         $cols[] = $this->name;
         $cols[] = "id";
