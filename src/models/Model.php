@@ -344,7 +344,7 @@ class Model
 
     private function set_query_read()
     {
-        $this->query = "SELECT {$this->all_select()} FROM {$this->table}{$this->join_substring()}ORDER BY id";
+        $this->query = "SELECT {$this->all_select()} FROM {$this->table} {$this->join_substring()}ORDER BY id";
     }
 
     private function set_query_read_single()
