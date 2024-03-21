@@ -244,11 +244,7 @@ class Model
             $data_arr[] = $row;
         }
 
-        if (count($data_arr) == 1) {
-            return json_encode($data_arr[0]);
-        } else {
-            return json_encode($data_arr);
-        }
+        return json_encode($data_arr);
     }
 
     private function update_pars()
