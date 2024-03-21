@@ -345,13 +345,13 @@ class Model
 
     private function set_query_read()
     {
-        $this->query = "SELECT {$this->all_select()} FROM {$this->table} ORDER BY id";
+        $this->query = "SELECT {$this->all_select()} FROM {$this->table}{$this->join_substring()}ORDER BY id";
     }
 
     private function set_query_read_single()
     {
         $where_sub = $this->query_substring("WHERE");
-        $this->query = "SELECT {$this->all_select()} FROM {$this->table}{$where_sub} ORDER BY id";
+        $this->query = "SELECT {$this->all_select()} FROM {$this->table}{$this->join_substring()}{$where_sub} ORDER BY id";
     }
 
     private function set_query_update()
@@ -360,7 +360,7 @@ class Model
         $this->query = "UPDATE {$this->table}{$set_sub} WHERE id = :id";
     }
 
-    protected function query_substring($type, $table_prefix = "")
+    protected function query_substring($type)
     {
         $par_keys = array_keys($this->pars);
         if (count($par_keys) == 0) {
@@ -384,7 +384,7 @@ class Model
         $delim = " " . $delim . " ";
         for ($index = 0; $index < count($par_keys); $index++) {
             $col = $par_keys[$index];
-            $substring = $substring . "{$table_prefix}{$col} = :{$col}";
+            $substring = $substring . "{$this->table_prefix()}{$col} = :{$col}";
             if ($index < count($par_keys) - 1) {
                 $substring = $substring . $delim;
             }
@@ -394,20 +394,52 @@ class Model
 
     private function all_select()
     {
+        $cols = $this->cols;
+        $cols[] = $this->name;
+        $cols[] = "id";
+        $cols = array_merge($cols, $this->foreign_keys);
+        $cols = array_unique($cols);
         $all_select = "";
-        for ($index = 0; $index < count($this->cols); $index++) {
-            $col = $this->cols[$index];
+        for ($index = 0; $index < count($cols); $index++) {
+            $col = $cols[$index];
             $val_arr = explode("_", $col);
-            if (in_array('id', $val_arr) && count($val_arr) > 1) {
-                $all_select = $all_select . "{$col} AS {$val_arr[0]}";
+
+            if (in_array("id", $val_arr) && count($val_arr) > 1) {
+                $name = $val_arr[0];
+                $joined_table = getenv(strtoupper($name));
+                $all_select = $all_select . "{$joined_table}.{$name} AS {$name}";
             } else {
-                $all_select = $all_select . $col;
+                $all_select = $all_select . "{$this->table}.{$col} AS {$col}";
             }
 
-            if ($index < count($this->cols) - 1) {
+            if ($index < count($cols) - 1) {
                 $all_select = $all_select . ", ";
             }
         }
         return $all_select;
+    }
+
+    protected function join_substring() {
+        if (count($this->foreign_keys) > 0) {
+            $join_sub = " ";
+        } else {
+            $join_sub = "";
+        }
+
+        foreach ($this->foreign_keys as $val) {
+            $val_arr = explode("_", $val);
+            $joined_table = getenv(strtoupper($val_arr[0]));
+            $join_sub = $join_sub . "LEFT JOIN {$joined_table} ON {$this->table}.{$val} = {$joined_table}.id ";
+        }
+        return $join_sub;
+    }
+
+    protected function table_prefix() {
+        if (count($this->foreign_keys) > 0) {
+            $table_prefix = "{$this->table}.";
+        } else {
+            $table_prefix = "";
+        }
+        return $table_prefix;
     }
 }
