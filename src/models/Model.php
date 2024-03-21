@@ -93,15 +93,17 @@ class Model
     // protected methods overridden by subclasses
     protected function set_cols()
     {
-        $this->diff_threshold = count($this->foreign_keys);
+        $this->diff_threshold = 0;
         switch ($this->operation) {
-            case 'delete':
             case 'read_single':
+                $this->diff_threshold = count($this->foreign_keys);
+            case 'delete':
                 $this->cols = array('id');
                 $this->cols = array_merge($this->cols, $this->foreign_keys);
                 break;
             case 'create':
                 $this->cols = array($this->name);
+                $this->cols = array_merge($this->cols, $this->foreign_keys);
                 break;
             case 'update':
                 $this->cols = array('id', $this->name);
