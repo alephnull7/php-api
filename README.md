@@ -2,4 +2,4 @@ This is somewhat generic OOP approach to a SQL-based PHP API. Specifically, the 
 
 Currently, the API is located at: https://13.58.25.183/api.
 
-Note that I the HTTPS connection currently is using a self-signed SSL certificate.
+Note that the HTTPS connection currently is using a self-signed SSL certificate.
